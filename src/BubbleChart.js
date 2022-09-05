@@ -5,19 +5,19 @@ class BubbleChart extends React.Component {
   static defaultProps = {
     data: [],
     useLabels: false,
-    width: 600,
-    height: 400
+    width: 1200,
+    height: 800,
   };
 
   constructor(props) {
     super(props);
 
-    this.minValue = 1;
-    this.maxValue = 100;
+    this.minValue = 0;
+    this.maxValue = 1;
     this.mounted = false;
 
     this.state = {
-      data: []
+      data: [],
     };
 
     this.radiusScale = this.radiusScale.bind(this);
@@ -31,17 +31,13 @@ class BubbleChart extends React.Component {
 
   componentDidMount() {
     if (this.props.data.length > 0) {
-      this.minValue =
-        0.95 *
-        d3.min(this.props.data, item => {
-          return item.v;
-        });
+      this.minValue = d3.min(this.props.data, (item) => {
+        return item.v;
+      });
 
-      this.maxValue =
-        1.05 *
-        d3.max(this.props.data, item => {
-          return item.v;
-        });
+      this.maxValue = d3.max(this.props.data, (item) => {
+        return item.v;
+      });
 
       this.simulatePositions(this.props.data);
     }
@@ -51,15 +47,15 @@ class BubbleChart extends React.Component {
     this.mounted = false;
   }
 
-  radiusScale = value => {
+  radiusScale = (value) => {
     const fx = d3
       .scaleSqrt()
       .range([1, 50])
       .domain([this.minValue, this.maxValue]);
-
     return fx(value);
   };
-  simulatePositions = data => {
+
+  simulatePositions = (data) => {
     this.simulation = d3
       .forceSimulation()
       .nodes(data)
@@ -68,7 +64,7 @@ class BubbleChart extends React.Component {
       .force("y", d3.forceY().strength(0.05))
       .force(
         "collide",
-        d3.forceCollide(d => {
+        d3.forceCollide((d) => {
           return this.radiusScale(d.v) + 2;
         })
       )
@@ -79,24 +75,20 @@ class BubbleChart extends React.Component {
       });
   };
 
-  renderBubbles = data => {
-    const minValue =
-      0.95 *
-      d3.min(data, item => {
-        return item.v;
-      });
+  renderBubbles = (data) => {
+    const minValue = d3.min(data, (item) => {
+      return item.v;
+    });
 
-    const maxValue =
-      1.05 *
-      d3.max(data, item => {
-        return item.v;
-      });
+    const maxValue = d3.max(data, (item) => {
+      return item.v;
+    });
 
     const color = d3
       .scaleLinear()
       .domain([minValue, maxValue])
       .interpolate(d3.interpolateHcl)
-      .range(["#eb001b", "#f79e1b"]);
+      .range(["red", "blue"]);
 
     // render simple circle element
     if (!this.props.useLabels) {
@@ -134,6 +126,7 @@ class BubbleChart extends React.Component {
           transform={`translate(${props.width / 2 + item.x}, ${props.height /
             2 +
             item.y})`}
+          onClick={() => console.log("hahaah")}
         >
           <circle
             r={this.radiusScale(item.v)}

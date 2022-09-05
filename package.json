@@ -6,7 +6,6 @@
   "main": "src/index.js",
   "dependencies": {
     "d3": "5.9.1",
-    "ramda": "0.26.1",
     "react": "16.8.0",
     "react-dom": "16.8.0",
     "react-scripts": "2.0.3"
